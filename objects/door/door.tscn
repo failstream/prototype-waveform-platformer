@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://d03jhm5tmmkij"]
+
+[ext_resource type="Script" uid="uid://dwujfhwdg3fpm" path="res://objects/door/door.gd" id="1_0i0ho"]
+[ext_resource type="Texture2D" uid="uid://cv3t53auap3bi" path="res://tilemaps/spritesheet-tiles-default.png" id="1_lu671"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0i0ho"]
+size = Vector2(36, 90)
+
+[node name="Door" type="Node2D"]
+script = ExtResource("1_0i0ho")
+
+[node name="OpenDoor" type="Sprite2D" parent="."]
+texture = ExtResource("1_lu671")
+region_enabled = true
+region_rect = Rect2(960, 0, 64, 128)
+
+[node name="ClosedDoor" type="Sprite2D" parent="."]
+texture = ExtResource("1_lu671")
+region_enabled = true
+region_rect = Rect2(960, 128, 64, 128)
+
+[node name="DoorArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorArea"]
+position = Vector2(0, 18)
+shape = SubResource("RectangleShape2D_0i0ho")
