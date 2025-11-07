@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://c21lha4x1ijkv"]
+
+[ext_resource type="Script" uid="uid://c4g7yva56ho4a" path="res://characters/frog/frog.gd" id="1_aoej0"]
+[ext_resource type="SpriteFrames" uid="uid://bdxleo8bgone1" path="res://characters/frog/frog_frames.tres" id="2_7ooxj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7ooxj"]
+size = Vector2(50, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6wucm"]
+size = Vector2(50, 50)
+
+[node name="Frog" type="CharacterBody2D" node_paths=PackedStringArray("hitbox")]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_aoej0")
+jump_pixel_height = 270.0
+horizontal_top_speed = 250.0
+valid_signals = Array[int]([0, 1, 2, 3])
+hitbox = NodePath("Area2D")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_7ooxj")
+frame_progress = 0.1452108
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 7)
+shape = SubResource("RectangleShape2D_7ooxj")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(0, 7)
+collision_layer = 2
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_6wucm")

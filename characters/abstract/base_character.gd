@@ -4,75 +4,53 @@
 @abstract class_name BaseCharacter
 extends CharacterBody2D
 
+
+@export_group("Jump")
 @export var jump_pixel_height: float = 256.0
 @export var time_to_peak: float = 0.6
 @export var time_to_descent: float = 0.4
 @export var terminal_velocity: float = 700.0
 
-@export var horizontal_top_speed: float = 500.0
-@export var time_to_top_speed: float = 0.5
-@export var time_to_stop: float = 0.3
-
-@export var wave_distance: float = 500.0
-
 var jump_velocity: float
 var jump_gravity_magnitude: float
 var fall_gravity_magnitude: float
 
+@export_group("Run")
+@export var horizontal_top_speed: float = 500.0
+@export var time_to_top_speed: float = 0.0
+@export var time_to_stop: float = 0.0
 
-@export var start_as_player_controlled: bool = false
+
+@export_group("Waves")
+@export var signal_range: float = 500.0
+@export var stop_movement_when_not_in_range: bool = true
+@export var can_in_air_jump_with_signal: bool = false
 @export var valid_signals: Array[SIGNALS] = []
-
-
-var _is_player_controlled: bool = false
-
-var is_currently_receiving: bool = false
-var is_currently_sending: bool = false
 
 enum SIGNALS { JUMP, RIGHT, LEFT, STILL }
 
+@export_group("")
+## Determines if this character starts as player controlled.
+@export var start_as_player_controlled: bool = false
+@export var hitbox: Area2D
+@export var debug: bool = false
 
-var _move_input: int = 0
+## Determines if this character is currently player controlled.
+var _is_player_controlled: bool = false
+
+## Determines if this character is currently allowed to receive signals.
+var _is_currently_receiving: bool = false
+
+## Determines if this character is currently allowed to send signals.
+var _is_currently_sending: bool = false
+
+
 
 signal received_wave
-var _signal_input: int = 0
+var _signal_x_input: int = 0
 
 
-func get_input() -> int:
-  
-  if _is_player_controlled:
-    return _get_player_input()
-  return _signal_input
-  
-
-func _received_wave(type: SIGNALS, data: Variant) -> void:
-  
-  if _is_player_controlled:
-    return
-  if type == SIGNALS.JUMP:
-    jump()
-  elif type == SIGNALS.RIGHT:
-    _signal_input = 1
-  elif type == SIGNALS.LEFT:
-    _signal_input = -1
-  elif type == SIGNALS.STILL:
-    _signal_input = 0
-
-
-func _get_player_input() -> int:
-  
-  _move_input = 0
-  if Input.is_action_pressed("ui_left"):
-    _move_input -= 1
-  if Input.is_action_pressed("ui_right"):
-    _move_input += 1
-  if _move_input == 1:
-    send_wave(SIGNALS.RIGHT)
-  elif _move_input == -1:
-    send_wave(SIGNALS.LEFT)
-  else:
-    send_wave(SIGNALS.STILL)
-  return _move_input
+#region Godot Overrides
 
 
 func _ready() -> void:
@@ -82,54 +60,154 @@ func _ready() -> void:
   if start_as_player_controlled:
     assert(Waves.current_player == null)
     _is_player_controlled = true
-    is_currently_sending = true
+    _is_currently_sending = true
     Waves.current_player = self
+  else:
+    _is_currently_receiving = true
   Waves.all_characters.append(self)
 
 
-func horizontal_speed_calc(_input: int, _delta: float) -> void:
+
+func _draw() -> void:
   
-  #var acceleration: float = 0.0 if is_zero_approx(time_to_top_speed) else horizontal_top_speed / time_to_top_speed
-  #var deceleration: float = 0.0 if is_zero_approx(time_to_stop) else horizontal_top_speed / time_to_stop
+  if _is_currently_sending:
+    draw_circle(to_local(global_position), signal_range, Color.DARK_RED, false, 2.0, true)
+
+
+func _process(_delta: float) -> void:
+  if debug:
+    queue_redraw()
+
+
+#region Physics Calculations
+
+
+## [br]Calculates the x velocity from [param current_input] and [member time_to_top_speed],[br]
+## [member time_to_stop], [member horizontal_top_speed], If either of the times is zero,[br]
+## then the respective acceleration/deceleration is instant.
+func velocity_x_calc(current_input: int, delta: float) -> float:
   
-  if _input == 0:
-    #velocity.x = move_toward(velocity.x, 0.0, delta * deceleration)
-    velocity.x = 0.0
+  var acceleration: float = 0.0 if is_zero_approx(time_to_top_speed) else horizontal_top_speed / time_to_top_speed
+  var deceleration: float = 0.0 if is_zero_approx(time_to_stop) else horizontal_top_speed / time_to_stop
+  
+  if current_input == 0:
+    if is_zero_approx(time_to_stop):
+      return 0.0
+    return move_toward(velocity.x, 0.0, delta * deceleration)
   else:
-    #velocity.x = move_toward(velocity.x, horizontal_top_speed * _input, delta * acceleration)
-    velocity.x = horizontal_top_speed * _input
+    if is_zero_approx(time_to_top_speed):
+      return horizontal_top_speed * current_input
+    return move_toward(velocity.x, horizontal_top_speed * current_input, delta * acceleration)
 
 
-func gravity_calc(delta: float) -> void:
+
+## [br]Calculates the gravity for the body when jumping and when falling and adds it to velocity.y.
+func add_gravity_velocity(delta: float) -> void:
   
   if velocity.y < 0.0 and not is_on_floor():
-    velocity.y += rising_speed_delta(delta)
+    velocity.y += move_toward(0.0, terminal_velocity, jump_gravity_magnitude * delta)
   elif not is_on_floor():
-    velocity.y += falling_speed_delta(delta)
+    velocity.y += move_toward(0.0, terminal_velocity, fall_gravity_magnitude * delta)
 
 
-func jump() -> void:
-  velocity.y = jump_velocity
-  if is_currently_sending:
-    send_wave(SIGNALS.JUMP)
 
+## [br]calculates gravity magnitudes for rising and falling as well as initial jump velocity from
+## the exported jump variables.
 func calculate_jump_velocities() -> void:
   
   jump_velocity = ((2.0 * jump_pixel_height) / time_to_peak) * -1.0
   jump_gravity_magnitude = ((-2.0 * jump_pixel_height) / (time_to_peak * time_to_peak)) * -1.0
   fall_gravity_magnitude = ((-2.0 * jump_pixel_height) / (time_to_descent * time_to_descent)) * -1.0
+
+
+## [br]Called when the body jumps
+func jump() -> void:
+  velocity.y = jump_velocity
+  if _is_currently_sending:
+    send_wave(SIGNALS.JUMP)
+
+
+#region Player Input
+
+## This is a wrapper for getting the x_input. If this character is player controlled it gets the[br]
+## player input, otherwise it uses the [member _signal_x_input]
+func get_x_input() -> int:
   
+  if _is_player_controlled:
+    return _get_player_x_input()
+  if stop_movement_when_not_in_range and not is_in_transmitter_range():
+    _signal_x_input = 0
+  return _signal_x_input
 
-func falling_speed_delta(delta: float) -> float:
-  return move_toward(0.0, terminal_velocity, fall_gravity_magnitude * delta)
 
-func rising_speed_delta(delta: float) -> float:
-  return move_toward(0.0, terminal_velocity, jump_gravity_magnitude * delta)
+## This gets the player_x_input and returns it.
+func _get_player_x_input() -> int:
+  
+  var move_input = 0
+  if Input.is_action_pressed("ui_left"):
+    move_input -= 1
+  if Input.is_action_pressed("ui_right"):
+    move_input += 1
+  send_x_input_signal(move_input)
+  return move_input
 
 
+
+#region Wave Signal Propagation
+
+
+## Reads the x_input passed in and then sends the appropriate signal out.
+func send_x_input_signal(current_input: int) -> void:
+  
+  if current_input == 1:
+    send_wave(SIGNALS.RIGHT)
+  elif current_input == -1:
+    send_wave(SIGNALS.LEFT)
+  else:
+    send_wave(SIGNALS.STILL)
+  return
+
+
+
+## Called when this Character receives a wave from somewhere.
+func _received_wave(type: SIGNALS, _data: Variant) -> void:
+  
+  if _is_player_controlled or not valid_signals.has(type):
+    return
+  if type == SIGNALS.JUMP:
+    if not can_in_air_jump_with_signal and not is_on_floor():
+      return
+    jump()
+  elif type == SIGNALS.RIGHT:
+    _signal_x_input = 1
+  elif type == SIGNALS.LEFT:
+    _signal_x_input = -1
+  elif type == SIGNALS.STILL:
+    _signal_x_input = 0
+
+
+
+## [br]Sends a wave of the signal [param type] to all Characters in range.
 func send_wave(type: SIGNALS) -> void:
   
+  if not _is_currently_sending:
+    return
+  
   for body in Waves.all_characters:
+    if body == self or not body._is_currently_receiving:
+      continue
     var distance: float = abs(body.global_position.distance_to(self.global_position))
-    if body != self and distance < wave_distance:
+    if distance < signal_range:
       body.received_wave.emit(type, [])
+
+
+## [br]Checks if the current character is in range of a transmitting character
+func is_in_transmitter_range() -> bool:
+  
+  for body in Waves.all_characters:
+    if body == self or not body._is_currently_sending:
+      continue
+    var distance: float = abs(body.global_position.distance_to(self.global_position))
+    if distance < body.signal_range:
+      return true
+  return false

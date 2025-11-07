@@ -1,0 +1,36 @@
+[gd_scene load_steps=5 format=3 uid="uid://k70btbum306m"]
+
+[ext_resource type="Script" uid="uid://dx3p6m7cpmqc6" path="res://characters/mouse/mouse.gd" id="1_0l7rv"]
+[ext_resource type="SpriteFrames" uid="uid://c0phbrkoxc1d1" path="res://characters/mouse/mouse_frames.tres" id="2_itfxy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dbnwk"]
+size = Vector2(50, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_itfxy"]
+size = Vector2(50, 50)
+
+[node name="Mouse" type="CharacterBody2D" node_paths=PackedStringArray("hitbox")]
+collision_layer = 2
+collision_mask = 3
+script = ExtResource("1_0l7rv")
+jump_pixel_height = 142.0
+time_to_peak = 0.4
+time_to_descent = 0.3
+valid_signals = Array[int]([0, 1, 2, 3])
+hitbox = NodePath("Area2D")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_itfxy")
+frame_progress = 0.072622314
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 7)
+shape = SubResource("RectangleShape2D_dbnwk")
+
+[node name="Area2D" type="Area2D" parent="."]
+position = Vector2(0, 7)
+collision_layer = 2
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_itfxy")

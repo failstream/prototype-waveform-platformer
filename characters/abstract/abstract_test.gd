@@ -3,9 +3,11 @@ extends BaseCharacter
 
 func _physics_process(delta: float) -> void:
   
-  var current_input: int = get_input()
-  horizontal_speed_calc(current_input, delta)
+  var current_x_input: int = get_x_input()
+  if current_x_input != 0:
+    pass
+  velocity.x = velocity_x_calc(current_x_input, delta)
   if _is_player_controlled and Input.is_action_just_pressed("ui_accept") and is_on_floor():
     jump()
-  gravity_calc(delta)
+  add_gravity_velocity(delta)
   move_and_slide()

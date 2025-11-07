@@ -1,0 +1,75 @@
+[gd_resource type="SpriteFrames" load_steps=9 format=3 uid="uid://c0phbrkoxc1d1"]
+
+[ext_resource type="Texture2D" uid="uid://bbmow2ljpb8rf" path="res://characters/spritesheet-enemies-default.png" id="1_u6rxl"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5ndfs"]
+atlas = ExtResource("1_u6rxl")
+region = Rect2(256, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_el6hm"]
+atlas = ExtResource("1_u6rxl")
+region = Rect2(256, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nhk0c"]
+atlas = ExtResource("1_u6rxl")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mjcuk"]
+atlas = ExtResource("1_u6rxl")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_15tar"]
+atlas = ExtResource("1_u6rxl")
+region = Rect2(256, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u6rxl"]
+atlas = ExtResource("1_u6rxl")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6ethc"]
+atlas = ExtResource("1_u6rxl")
+region = Rect2(256, 64, 64, 64)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5ndfs")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_el6hm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nhk0c")
+}],
+"loop": true,
+"name": &"falling",
+"speed": 24.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mjcuk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_15tar")
+}],
+"loop": true,
+"name": &"rising",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u6rxl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6ethc")
+}],
+"loop": true,
+"name": &"walking",
+"speed": 5.0
+}]

@@ -1,0 +1,35 @@
+GAME STRUCTURE
+
+LEVEL NODE controls only the state of the current level.
+  A) Reference to all objects in level associated with beating the level
+  B) Listen to signal for if a Character dies (auto level restart or character respawn)
+  C) Manual level restart (done via menu, listen for signal)
+  D) Emit signal for when level is beaten
+  E) Onload connect signal to LEVEL MANAGER
+
+
+LEVEL MANAGER singleton controls the logic of which level to enter next
+  A) Load specific level function
+  B) Load next level function
+  C) Level order structure contained here
+
+
+
+
+
+
+
+
+MENUS
+
+
+1) In-game level menu options
+  A) Restart Level
+  B) Settings
+    a) Sound
+      SFX volume
+      Music volume
+    b) Graphics
+      ????
+    c) Controls
+  C) Main Menu
