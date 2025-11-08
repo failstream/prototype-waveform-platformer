@@ -11,12 +11,14 @@ config_version=5
 [application]
 
 config/name="Prototype Waveform Platformer"
+run/main_scene="uid://djbhw2rg1qkan"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [autoload]
 
-Waves="*res://singletons/waves.gd"
+Global="*res://singletons/global.gd"
+LevelManager="*res://singletons/level_manager.gd"
 
 [layer_names]
 

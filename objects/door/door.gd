@@ -16,6 +16,19 @@ enum DOOR_TYPE { ANY, GREEN, GREY }
   
 }
 
+var overlapping_characters: Array[BaseCharacter] = []
+
+
+func exit_condition_satisfied() -> bool:
+  
+  for character in overlapping_characters:
+    if door_type == DOOR_TYPE.ANY:
+      return true
+    elif character is Frog and door_type == DOOR_TYPE.GREEN:
+      return true
+    elif character is Mouse and door_type == DOOR_TYPE.GREY:
+      return true
+  return false
 
 
 func _ready() -> void:
@@ -23,19 +36,16 @@ func _ready() -> void:
   door_area.connect(&"area_entered", _area_entered, CONNECT_PERSIST)
   door_area.connect(&"area_exited", _area_exited, CONNECT_PERSIST)
   set_modulate(door_colors[door_type])
+  LevelManager.current_level_root.exits.append(self)
 
 
 func _area_entered(_area: Area2D) -> void:
-  if door_type == DOOR_TYPE.GREEN and _area.get_parent() is Frog:
-    print("hello frog")
-  elif door_type == DOOR_TYPE.GREY and _area.get_parent() is Mouse:
-    print("hello mouse")
-  elif door_type == DOOR_TYPE.ANY and _area.get_parent() is BaseCharacter:
-    print("hello anyone")
-  ## check area parent if it is correct character
-  ## check all doors if correct character is on them
-  ## BING
-
+  if _area.get_parent() is BaseCharacter:
+    if not overlapping_characters.has(_area.get_parent()):
+      overlapping_characters.append(_area.get_parent())
+      LevelManager.current_level_root.check_level_beaten()
 
 func _area_exited(_area: Area2D) -> void:
-  print("goodbye")
+  if _area.get_parent() is BaseCharacter:
+    if overlapping_characters.has(_area.get_parent()):
+      overlapping_characters.remove_at(overlapping_characters.find(_area.get_parent()))

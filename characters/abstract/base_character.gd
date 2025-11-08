@@ -58,14 +58,20 @@ func _ready() -> void:
   connect(&"received_wave", _received_wave, CONNECT_PERSIST)
   calculate_jump_velocities()
   if start_as_player_controlled:
-    assert(Waves.current_player == null)
+    assert(LevelManager.current_level_root.current_player == null)
     _is_player_controlled = true
     _is_currently_sending = true
-    Waves.current_player = self
+    LevelManager.current_level_root.current_player = self
   else:
     _is_currently_receiving = true
-  Waves.all_characters.append(self)
+  LevelManager.current_level_root.all_characters.append(self)
 
+
+func _exit_tree() -> void:
+  
+  if _is_player_controlled:
+    LevelManager.current_level_root.current_player = null
+  LevelManager.current_level_root.all_characters.remove_at(LevelManager.current_level_root.all_characters.find(self))
 
 
 func _draw() -> void:
@@ -193,7 +199,7 @@ func send_wave(type: SIGNALS) -> void:
   if not _is_currently_sending:
     return
   
-  for body in Waves.all_characters:
+  for body in LevelManager.current_level_root.all_characters:
     if body == self or not body._is_currently_receiving:
       continue
     var distance: float = abs(body.global_position.distance_to(self.global_position))
@@ -204,7 +210,7 @@ func send_wave(type: SIGNALS) -> void:
 ## [br]Checks if the current character is in range of a transmitting character
 func is_in_transmitter_range() -> bool:
   
-  for body in Waves.all_characters:
+  for body in LevelManager.current_level_root.all_characters:
     if body == self or not body._is_currently_sending:
       continue
     var distance: float = abs(body.global_position.distance_to(self.global_position))

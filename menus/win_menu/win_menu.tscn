@@ -1,0 +1,74 @@
+[gd_scene load_steps=3 format=3 uid="uid://cu8xj2s5dgm4f"]
+
+[ext_resource type="Script" uid="uid://d0amw8yfyljp3" path="res://menus/win_menu/win_menu.gd" id="1_vccua"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_vccua"]
+font_size = 30
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
+
+[node name="WinMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vccua")
+
+[node name="ReferenceRect" type="ReferenceRect" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.25
+anchor_top = 0.4
+anchor_right = 0.75
+anchor_bottom = 0.7
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="ReferenceRect"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+text = "LEVEL WON!"
+label_settings = SubResource("LabelSettings_vccua")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ReferenceRect"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -49.5
+offset_top = -33.0
+offset_right = 49.5
+offset_bottom = 33.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 8
+
+[node name="PlayAgain" type="Button" parent="ReferenceRect/VBoxContainer"]
+layout_mode = 2
+text = "Play Again"
+
+[node name="LevelSelect" type="Button" parent="ReferenceRect/VBoxContainer"]
+layout_mode = 2
+text = "Level Select"
+
+[node name="Exit" type="Button" parent="ReferenceRect/VBoxContainer"]
+layout_mode = 2
+text = "Exit Game"
+
+[connection signal="pressed" from="ReferenceRect/VBoxContainer/PlayAgain" to="." method="_on_play_again_pressed"]
+[connection signal="pressed" from="ReferenceRect/VBoxContainer/LevelSelect" to="." method="_on_level_select_pressed"]
+[connection signal="pressed" from="ReferenceRect/VBoxContainer/Exit" to="." method="_on_exit_pressed"]
