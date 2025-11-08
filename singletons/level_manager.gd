@@ -8,7 +8,9 @@ var current_level_root: LevelRoot
 var current_level_index: int
 
 var level_array: Array[String] = [
-  "res://_test_scenes/test_scene_01.tscn"
+  "res://_test_scenes/test_scene_01.tscn",
+  "res://_test_scenes/two_halls.tscn"
+  
 ]
 
 
