@@ -32,11 +32,16 @@ enum SIGNALS { JUMP, RIGHT, LEFT, STILL }
 @export_group("")
 ## Determines if this character starts as player controlled.
 @export var start_as_player_controlled: bool = false
+@export var can_be_player_controlled: bool = true
+@export var can_receive_signals: bool = true
 @export var hitbox: Area2D
 @export var debug: bool = false
 
 ## Determines if this character is currently player controlled.
 var _is_player_controlled: bool = false
+
+## Determines if this character can be player controlled
+var _can_be_player_controlled: bool = false
 
 ## Determines if this character is currently allowed to receive signals.
 var _is_currently_receiving: bool = false
@@ -57,6 +62,7 @@ func _ready() -> void:
   
   connect(&"received_wave", _received_wave, CONNECT_PERSIST)
   calculate_jump_velocities()
+  _can_be_player_controlled = can_be_player_controlled
   if start_as_player_controlled:
     assert(LevelManager.current_level_root.current_player == null)
     _is_player_controlled = true
@@ -146,16 +152,73 @@ func get_x_input() -> int:
   return _signal_x_input
 
 
+func jump_input_pressed() -> void:
+  
+  if _is_player_controlled and is_on_floor():
+    jump()
+
+
+func toggle_wave_pressed() -> void:
+  
+  if _is_player_controlled:
+    _toggle_transmission()
+
+
+func swap_character_pressed() -> void:
+  
+  if not LevelManager.current_level_root.swap_character_timer.is_stopped():
+    return
+  if _is_player_controlled:
+    var nearest_char: BaseCharacter = _find_nearest_swappable_character()
+    if nearest_char != null:
+      _swap_player_control(nearest_char)
+      LevelManager.current_level_root.swap_character_timer.start()
+
+
 ## This gets the player_x_input and returns it.
 func _get_player_x_input() -> int:
   
   var move_input = 0
-  if Input.is_action_pressed("ui_left"):
+  if Input.is_action_pressed("left"):
     move_input -= 1
-  if Input.is_action_pressed("ui_right"):
+  if Input.is_action_pressed("right"):
     move_input += 1
   send_x_input_signal(move_input)
   return move_input
+
+
+
+#region Character Swapping
+
+
+func _swap_player_control(new_character: BaseCharacter) -> void:
+  
+  var current_player_controlled: BaseCharacter = LevelManager.current_level_root.current_player
+  current_player_controlled._is_player_controlled = false
+  if current_player_controlled.can_receive_signals:
+    current_player_controlled._is_currently_receiving = true
+  new_character._is_player_controlled = true
+  new_character._is_currently_receiving = false
+  LevelManager.current_level_root.current_player = new_character
+
+
+## returns the nearest character that can currently be swapped to. Returns null if no character found.
+func _find_nearest_swappable_character() -> BaseCharacter:
+  
+  var other_characters: Array[BaseCharacter] = LevelManager.current_level_root.all_characters
+  var character: BaseCharacter = null
+  var character_distance: float = -1.0
+  for body in other_characters:
+    if not body._can_be_player_controlled or body == self:
+      continue
+    var distance: float = abs(body.global_position.distance_to(self.global_position))
+    if character == null:
+      character = body
+      character_distance = distance
+    elif distance < character_distance:
+      character = body
+      character_distance = distance
+  return character
 
 
 
@@ -173,6 +236,10 @@ func send_x_input_signal(current_input: int) -> void:
     send_wave(SIGNALS.STILL)
   return
 
+
+func _toggle_transmission() -> void:
+  
+  _is_currently_sending = not _is_currently_sending
 
 
 ## Called when this Character receives a wave from somewhere.

@@ -1,23 +1,74 @@
 GAME STRUCTURE
 
-LEVEL NODE controls only the state of the current level.
-  A) Reference to all objects in level associated with beating the level
-  B) Listen to signal for if a Character dies (auto level restart or character respawn)
-  C) Manual level restart (done via menu, listen for signal)
-  D) Emit signal for when level is beaten
-  E) Onload connect signal to LEVEL MANAGER
+
+PLAYER CONTROL CHANGES
+
+  1) Make behavior consistent when characters jump off of characters
+  2) Should characters move in tile increments?
+  3) Should characters push other characters or be blocked by them?
+
+BASIC PLATFORMER MECHANICS
+
+  1) Walls and floors (IMPLEMENTED!)
+  2) Semisolid floors (IMPLEMENTED!)
+  3) Spring that shoots character up high
+  4) Key that must be collected to open a door
+  5) Lava/Spikes
+  6) Floor Switch that does different things depending on context
+  7) Floor Switch that only stays activated when held
+  8) Moving Platform
+  9) Weight-based Platform (on a chain that sinks or rises based on weight)
+  10) 
 
 
-LEVEL MANAGER singleton controls the logic of which level to enter next
-  A) Load specific level function
-  B) Load next level function
-  C) Level order structure contained here
+UNIQUE GAME MECHANICS
+
+    When each character has a different move speed, jump height, and action ability and you can swap player controlled character and turn on/off Wave Control
+
+  1) Player controls two characters with one controlled directly and the other controlled when a limited distance from the main controller (IMPLEMENTED!)
+  2) Doors that require specific characters to enter it. (IMPLEMENTED!)
+  3) Characters have an action that is different. Using the action should also use the action on the other character.
+    A) Dash
+    B) Create/Destroy Block(s)
+    C) Push and or Pull
+        i)   Push/pull blocks
+        ii)  Push/pull 2-3 state toggle switch
+        iii) Push/pull other characters
+    D) Pick up object
+        i)   Block
+        ii)  Spring
+        iii) Character
+  4) Toggle Wave Control ( a controller button to allow the player to turn on/off Wave Control. Should also be made to be disabled or manipulated by environment)
+    A) Energy Laser (or area) that turns on or off wave control for any character that passes through it and disables player ability to toggle themselves
+  5) Change Character ( a controller button to allow the player to switch the player controlled character. Should also be made to be disabled or manipulated by environment)
+    A) Area that disables player ability to control a character directly. Auto switches to the nearest controllable character.
+    B) Should have Rules that it follows, such as when swapping always swaps to the nearest character.
 
 
 
+CHARACTER CONCEPTS/CLARITY
 
-
-
+  1) ROBOTS  -  Easy clarity, easy to draw.
+  
+    A) Antennas indicate transmission send/receive ability. Broken Antennas can indicate inability.
+    
+    B) Eye Color/glow can indicate which Robot is currently controlled directly.
+    
+    C) Interchangable body parts can differentiate robot abilities.
+      a) MIDSECTION Fist for Push
+      b) MIDSECTION Claw for pick up object
+      c) MIDSECTION Rocket backpack for dash
+      d) MIDSECTION Wand for create/destroy block
+      e) BOTTOM Wheel for horizontal movement speed with limited jump
+      f) BOTTOM Spring for high jump/limited horizontal movement speed
+      g) BOTTOM Legs for normal movement/jump
+      h) TOP Long Antenna to indicate transmission send ability (broken if unable)
+      i) TOP Short Antenna to indicate transmission receive ability (broken if unable)
+      
+    D) Robot Color indicates environment interaction possibilities
+      a) Must exit their own colored door
+      b) Can only interact with their own colored key
+      c) Any other color thing I can think of
 
 
 MENUS
