@@ -34,6 +34,7 @@ enum SIGNALS { JUMP, RIGHT, LEFT, STILL }
 @export var start_as_player_controlled: bool = false
 @export var can_be_player_controlled: bool = true
 @export var can_receive_signals: bool = true
+@export var can_toggle_sending: bool = true
 @export var hitbox: Area2D
 @export var debug: bool = false
 
@@ -49,7 +50,8 @@ var _is_currently_receiving: bool = false
 ## Determines if this character is currently allowed to send signals.
 var _is_currently_sending: bool = false
 
-
+## Determines if this character can toggle sending messages when player controlled.
+var _can_toggle_sending: bool = true
 
 signal received_wave
 var _signal_x_input: int = 0
@@ -63,6 +65,7 @@ func _ready() -> void:
   connect(&"received_wave", _received_wave, CONNECT_PERSIST)
   calculate_jump_velocities()
   _can_be_player_controlled = can_be_player_controlled
+  _can_toggle_sending = can_toggle_sending
   if start_as_player_controlled:
     assert(LevelManager.current_level_root.current_player == null)
     _is_player_controlled = true
@@ -160,7 +163,7 @@ func jump_input_pressed() -> void:
 
 func toggle_wave_pressed() -> void:
   
-  if _is_player_controlled:
+  if _is_player_controlled and _can_toggle_sending:
     _toggle_transmission()
 
 
@@ -240,6 +243,21 @@ func send_x_input_signal(current_input: int) -> void:
 func _toggle_transmission() -> void:
   
   _is_currently_sending = not _is_currently_sending
+
+
+func set_transmission_status(value: bool) -> void:
+  
+  _is_currently_sending = value
+
+
+func set_transmission_toggle_capability(value: bool) -> void:
+  
+  _can_toggle_sending = value
+
+
+func set_receiving_status(value: bool) -> void:
+  
+  _is_currently_receiving = value
 
 
 ## Called when this Character receives a wave from somewhere.

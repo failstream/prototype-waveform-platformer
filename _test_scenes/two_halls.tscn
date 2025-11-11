@@ -21,10 +21,11 @@ position = Vector2(94, 128)
 [node name="Frog" parent="." instance=ExtResource("4_sqpdb")]
 position = Vector2(1057, 115)
 valid_signals = Array[int]([1, 2, 3])
+can_be_player_controlled = false
 
 [node name="Frog2" parent="." instance=ExtResource("4_sqpdb")]
 position = Vector2(1056, 537)
-signal_range = 2000.0
+signal_range = 1000.0
 start_as_player_controlled = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
