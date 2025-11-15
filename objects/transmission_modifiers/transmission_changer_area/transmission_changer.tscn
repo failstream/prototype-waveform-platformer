@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3 uid="uid://deuer31dnou3a"]
+
+[ext_resource type="Script" uid="uid://cnnnug0jrlgr6" path="res://objects/transmission_modifiers/area_scripts/transmission_area2d.gd" id="1_3mlki"]
+[ext_resource type="Script" uid="uid://bm25cajlhowdj" path="res://objects/transmission_modifiers/transmission_changer_area/transmission_changer.gd" id="1_uwmhn"]
+[ext_resource type="Texture2D" uid="uid://wcxj8botchrx" path="res://objects/transmission_modifiers/transmission_changer_area/graphics_borders.png" id="2_rfe16"]
+[ext_resource type="Texture2D" uid="uid://dhnveydocw0t4" path="res://objects/transmission_modifiers/transmission_changer_area/transmission_graphics.png" id="3_6hbun"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uwmhn"]
+size = Vector2(128, 128)
+
+[node name="TransmissionChanger" type="Node2D" node_paths=PackedStringArray("sprite_2d", "collision_shape_2d", "nine_patch_rect")]
+script = ExtResource("1_uwmhn")
+sprite_2d = NodePath("Sprite2D")
+collision_shape_2d = NodePath("TransmissionArea2D/CollisionShape2D")
+nine_patch_rect = NodePath("NinePatchRect")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_rfe16")
+region_rect = Rect2(0, 0, 64, 64)
+patch_margin_left = 18
+patch_margin_top = 18
+patch_margin_right = 18
+patch_margin_bottom = 18
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("3_6hbun")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="TransmissionArea2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_3mlki")
+on_exit = 1
+metadata/_custom_type_script = "uid://cnnnug0jrlgr6"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TransmissionArea2D"]
+shape = SubResource("RectangleShape2D_uwmhn")

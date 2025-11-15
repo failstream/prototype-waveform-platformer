@@ -242,12 +242,13 @@ func send_x_input_signal(current_input: int) -> void:
 
 func _toggle_transmission() -> void:
   
-  _is_currently_sending = not _is_currently_sending
+  set_transmission_status(not _is_currently_sending)
 
 
 func set_transmission_status(value: bool) -> void:
   
   _is_currently_sending = value
+  queue_redraw()
 
 
 func set_transmission_toggle_capability(value: bool) -> void:
