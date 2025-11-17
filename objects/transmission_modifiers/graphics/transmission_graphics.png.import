@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dhnveydocw0t4"
-path="res://.godot/imported/transmission_graphics.png-f4a51386f5bc5cdbc43e7d3f47672e9a.ctex"
+path="res://.godot/imported/transmission_graphics.png-69490db475bd97ee15059aaa645e23de.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://objects/transmission_modifiers/transmission_changer_area/transmission_graphics.png"
-dest_files=["res://.godot/imported/transmission_graphics.png-f4a51386f5bc5cdbc43e7d3f47672e9a.ctex"]
+source_file="res://objects/transmission_modifiers/graphics/transmission_graphics.png"
+dest_files=["res://.godot/imported/transmission_graphics.png-69490db475bd97ee15059aaa645e23de.ctex"]
 
 [params]
 

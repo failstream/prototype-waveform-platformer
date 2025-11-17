@@ -125,6 +125,11 @@ func add_gravity_velocity(delta: float) -> void:
     velocity.y += move_toward(0.0, terminal_velocity, fall_gravity_magnitude * delta)
 
 
+## Used for external objects to calculate jump velocity (like a spring)
+func calculate_jump_velocity(pixel_height: float = jump_pixel_height, peak_time: float = time_to_peak) -> float:
+  return ((2.0 * pixel_height) / peak_time) * -1.0
+
+
 
 ## [br]calculates gravity magnitudes for rising and falling as well as initial jump velocity from
 ## the exported jump variables.
@@ -136,9 +141,9 @@ func calculate_jump_velocities() -> void:
 
 
 ## [br]Called when the body jumps
-func jump() -> void:
-  velocity.y = jump_velocity
-  if _is_currently_sending:
+func jump(signal_others: bool = true, velocity_amount: float = jump_velocity) -> void:
+  velocity.y = velocity_amount
+  if signal_others and _is_currently_sending:
     send_wave(SIGNALS.JUMP)
 
 

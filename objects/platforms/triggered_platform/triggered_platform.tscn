@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://cd75v46h5e4s0"]
+
+[ext_resource type="Script" uid="uid://ybi7clt2oyq8" path="res://objects/platforms/triggered_platform/triggered_platform.gd" id="1_4nvk5"]
+[ext_resource type="Texture2D" uid="uid://cv3t53auap3bi" path="res://tilemaps/spritesheet-tiles-default.png" id="1_poesk"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4nvk5"]
+size = Vector2(64, 64)
+
+[node name="TriggeredPlatform" type="AnimatableBody2D"]
+collision_mask = 0
+script = ExtResource("1_4nvk5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("1_poesk")
+region_enabled = true
+region_rect = Rect2(1024, 1024, 64, 64)
+region_filter_clip_enabled = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_4nvk5")

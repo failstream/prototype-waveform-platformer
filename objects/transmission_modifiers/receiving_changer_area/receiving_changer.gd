@@ -3,19 +3,19 @@
 extends Node2D
 
 @export var sprite_2d: Sprite2D
-@export var transmission_area: TransmissionArea2D
+@export var receiving_area: ReceivingArea2D
 @export var collision_shape_2d: CollisionShape2D
 @export var nine_patch_rect: NinePatchRect
 
-@export var action: TransmissionArea2D.Action = TransmissionArea2D.Action.ON:
+@export var action: ReceivingArea2D.Action = ReceivingArea2D.Action.ON:
   set(value):
     action = value
-    transmission_area.effect = action
+    receiving_area.effect = action
 
-@export var exit_action: TransmissionArea2D.ExitAction = TransmissionArea2D.ExitAction.DEFAULT:
+@export var exit_action: ReceivingArea2D.ExitAction = ReceivingArea2D.ExitAction.DEFAULT:
   set(value):
     exit_action = value
-    transmission_area.on_exit = exit_action
+    receiving_area.on_exit = exit_action
 
 const TILE_SIZE: int = 64
 
@@ -31,8 +31,8 @@ func _ready() -> void:
   
   if Engine.is_editor_hint():
     return
-  transmission_area.effect = action
-  transmission_area.on_exit = exit_action
+  receiving_area.effect = action
+  receiving_area.on_exit = exit_action
 
 
 func get_pixel_size() -> Vector2:

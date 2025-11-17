@@ -11,7 +11,7 @@ BASIC PLATFORMER MECHANICS
 
   1) Walls and floors (IMPLEMENTED!)
   2) Semisolid floors (IMPLEMENTED!)
-  3) Spring that shoots character up high
+  3) Spring that shoots character up high (IMPLEMENTED!)
   4) Key that must be collected to open a door
   5) Lava/Spikes
   6) Floor Switch that does different things depending on context

@@ -6,7 +6,11 @@ extends CharacterAffectingArea2D
 enum Action { ON, OFF }
 enum ExitAction { LEAVE, DEFAULT, PREVIOUS }
 
+## This is the effect that the area has, either permanently turns on the transmission, or off
 @export var effect: Action
+
+## This is what happens when the character exits the area, changes it back to default value,
+## previous value, or leaves it as is.
 @export var on_exit: ExitAction
 
 var previous_toggle_value: Dictionary[BaseCharacter, bool] = {}

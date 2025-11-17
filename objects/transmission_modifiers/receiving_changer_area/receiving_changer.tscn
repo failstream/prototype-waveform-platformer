@@ -1,0 +1,53 @@
+[gd_scene load_steps=6 format=3 uid="uid://bcv6taygu88go"]
+
+[ext_resource type="Script" uid="uid://c8r5fwnft7q5u" path="res://objects/transmission_modifiers/receiving_changer_area/receiving_changer.gd" id="1_26wxp"]
+[ext_resource type="Texture2D" uid="uid://wcxj8botchrx" path="res://objects/transmission_modifiers/graphics/graphics_borders.png" id="2_v2odm"]
+[ext_resource type="Texture2D" uid="uid://dhnveydocw0t4" path="res://objects/transmission_modifiers/graphics/transmission_graphics.png" id="3_kthit"]
+[ext_resource type="Script" uid="uid://caqbudvt3ay31" path="res://objects/transmission_modifiers/area_scripts/receiving_area2d.gd" id="4_26wxp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uwmhn"]
+size = Vector2(128, 128)
+
+[node name="ReceivingChanger" type="Node2D" node_paths=PackedStringArray("sprite_2d", "receiving_area", "collision_shape_2d", "nine_patch_rect")]
+modulate = Color(1, 1, 0.24780053, 1)
+script = ExtResource("1_26wxp")
+sprite_2d = NodePath("Sprite2D")
+receiving_area = NodePath("ReceivingArea2D")
+collision_shape_2d = NodePath("ReceivingArea2D/CollisionShape2D")
+nine_patch_rect = NodePath("NinePatchRect")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+texture_filter = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_v2odm")
+region_rect = Rect2(0, 0, 64, 64)
+patch_margin_left = 18
+patch_margin_top = 18
+patch_margin_right = 18
+patch_margin_bottom = 18
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_repeat = 2
+texture = ExtResource("3_kthit")
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 64)
+
+[node name="ReceivingArea2D" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("4_26wxp")
+on_exit = 1
+metadata/_custom_type_script = "uid://caqbudvt3ay31"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ReceivingArea2D"]
+shape = SubResource("RectangleShape2D_uwmhn")
